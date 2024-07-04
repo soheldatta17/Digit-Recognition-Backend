@@ -4,10 +4,12 @@ from PIL import Image
 import numpy as np
 import torchvision.transforms as transforms
 import os
+import signal
+import sys
 
 app = Flask(__name__)
 
-# Load the model
+# Define your model class
 class SimpleNN(torch.nn.Module):
     def __init__(self):
         super(SimpleNN, self).__init__()
@@ -22,6 +24,7 @@ class SimpleNN(torch.nn.Module):
         x = self.fc3(x)
         return x
 
+# Load the model
 model = SimpleNN()
 
 # Check if model file exists
@@ -72,6 +75,13 @@ def predict_digit():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Signal handler for termination signal
+def signal_handler(sig, frame):
+    print('Received termination signal. Exiting gracefully...')
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_handler)
 
 if __name__ == '__main__':
     app.run(debug=True)
