@@ -4,7 +4,6 @@ from PIL import Image
 import numpy as np
 import torchvision.transforms as transforms
 import os
-import signal
 import sys
 
 app = Flask(__name__)
@@ -75,13 +74,6 @@ def predict_digit():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-# Signal handler for termination signal
-def signal_handler(sig, frame):
-    print('Received termination signal. Exiting gracefully...')
-    sys.exit(0)
-
-signal.signal(signal.SIGTERM, signal_handler)
 
 if __name__ == '__main__':
     app.run(debug=True)
